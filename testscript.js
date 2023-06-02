@@ -13,5 +13,10 @@ function goframe() {
   
   var tags = framebody.querySelectorAll('script[type="text/javascript"]')
   tags.forEach(asyncAppend);
+  
+  var framesource = document.getElementById('adframesource');
+  if (framesource) {
+    framesource.innerText = creativeSource;
+  }
 }
 window.onload = goframe;
