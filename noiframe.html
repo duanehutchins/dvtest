@@ -1,0 +1,50 @@
+<html>
+  <head>
+    <script type="text/javascript">
+      const timer = Date.now();
+      const showLoadTime = (event) => {
+        // Show DOMContentLoaded Time, in Milliseconds
+        const delay = Date.now() - timer;
+        console.log(event.type, document.readyState, delay, 'ms');
+
+        document.body.querySelector('h2 > span').innerText = delay;
+        document.removeEventListener("DOMContentLoaded", showLoadTime);
+      };
+      document.addEventListener("DOMContentLoaded", showLoadTime);
+      window.onloadeddata = () => console.log('here');
+    </script>
+  </head>
+  <body>
+    <h1>Loading...</h1>
+    <form action="" method="GET"><select name="async" onchange="document.forms[0].submit()">
+      <option disabled>Select how you want to load this test page</option>
+      <option value="yes">Async</option>
+      <option value="no">Sync</option>
+      <option value="fixDvTag">Async with DV's tag fixed</option>
+    </select></form>
+    <h2>DOMContentLoaded Time: <span>???</span> ms</h2>
+
+    <script type="text/javascript">
+      {
+        // Show whether we're using Sync or Async
+        const asyncParam = new URL(document.location).searchParams.get('async');
+        const useAsync = asyncParam !== 'no';
+        document.body.querySelector('select[name="async"]').value = asyncParam || 'yes';
+
+        const loadingText = document.body.querySelector('select[name="async"]').selectedOptions[0].text;
+        document.body.querySelector('h1').innerText = `Loading via ${loadingText}...`;
+
+        // Load the script via sync or async selection
+        const async = useAsync ? 'async' : '';
+        const fixDvTag = asyncParam === 'fixDvTag' ? 'fixDvTag' : '';
+        document.write(`<script ${async} id="adscript" type="text/javascript" src="./noiframe-testscript.js" data-fixdvtag="${fixDvTag}"><\/script>`);
+      }
+    </script>
+
+    <div style="position: absolute; bottom: 0px">
+      Creative Code:
+      <br>
+      <textarea id="adframesource" style="width:50em;height:30em" disabled></textarea>
+    </div>
+  </body>
+</html>
